@@ -34,3 +34,11 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+def create_session(db: Session, session: schemas.SessionCreate, user_id: int):
+    db_session = models.Session(**session.dict(), user_id=user_id)
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return db_session
