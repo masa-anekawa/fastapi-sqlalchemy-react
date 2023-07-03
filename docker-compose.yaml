@@ -8,11 +8,11 @@ services:
       - ./api:/app
     ports:
       - 8000:80
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   volumes:
-  #     - ./frontend:/usr/src/app
-  #   ports:
-  #     - 3000:3000
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - 3000:3000
