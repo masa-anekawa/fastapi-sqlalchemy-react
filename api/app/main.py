@@ -2,11 +2,11 @@ from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-import crud
-import models
-import schemas
-from database import SessionLocal, engine
-import uvicorn
+
+from . import crud
+from . import models
+from . import schemas
+from .database import SessionLocal, engine
 
 
 origins = [
@@ -68,7 +68,3 @@ def crete_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = De
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True, port=8000)
