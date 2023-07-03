@@ -34,24 +34,3 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
-
-
-class SessionBase(BaseModel):
-    user_id: str
-
-
-class SessionCreate(SessionBase):
-    password: str
-
-
-class SessionValidate(SessionBase):
-    random_string: str
-
-
-class Session(SessionBase):
-    id: int
-    is_active: bool
-    random_string: str
-
-    class Config:
-        orm_mode = True
