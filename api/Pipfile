@@ -8,6 +8,8 @@ fastapi = "*"
 sqlalchemy = "*"
 uvicorn = "*"
 gunicorn = "*"
+alembic = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 flake8 = "*"
