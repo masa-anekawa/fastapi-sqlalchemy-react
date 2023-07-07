@@ -10,6 +10,7 @@ uvicorn = "*"
 gunicorn = "*"
 alembic = "*"
 psycopg2-binary = "*"
+pytest = "*"
 
 [dev-packages]
 flake8 = "*"
@@ -17,6 +18,8 @@ mypy = "*"
 black = "*"
 isort = "*"
 autopep8 = "*"
+pytest = "*"
+httpx = "*"
 
 [requires]
 python_version = "3.11"
