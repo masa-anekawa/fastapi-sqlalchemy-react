@@ -66,7 +66,7 @@ def validate_session(db: Session, session: schemas.SessionValidate):
     db_session = db.query(models.Session).filter(
         models.Session.user_id == session.user_id,
         models.Session.session_id == session.session_id,
-        models.Session.is_active == True,
+        models.Session.is_active,
         models.Session.expires_at > "2021-01-01T00:00:00",
         ).first()
     if not db_session:

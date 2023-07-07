@@ -1,39 +1,47 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from typing_extensions import Annotated
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from .database import Base
+
+
+pk_id = Annotated[int, mapped_column(primary_key=True, index=True)]
+email = Annotated[str, mapped_column(unique=True, index=True)]
+fk_user_id = Annotated[int, mapped_column(ForeignKey("users.id"))]
+str_indexed = Annotated[str, mapped_column(index=True)]
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
+    id: Mapped[pk_id] = mapped_column(init=False)
+    email: Mapped[email]
+    hashed_password: Mapped[str]
+    is_active: Mapped[bool] = mapped_column(default=True)
 
-    items = relationship("Item", back_populates="owner")
-    sessions = relationship("Session", back_populates="user")
+    items: Mapped[list["Item"]] = relationship(back_populates="owner", default_factory=list)
+    sessions: Mapped[list["Session"]] = relationship(back_populates="user", default_factory=list)
 
 
 class Item(Base):
     __tablename__ = "items"
 
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    id: Mapped[pk_id] = mapped_column(init=False)
+    title: Mapped[str]
+    description: Mapped[str]
+    owner_id: Mapped[fk_user_id]
 
-    owner = relationship("User", back_populates="items")
+    owner: Mapped["User"] = relationship(back_populates="items", default=None)
 
 
 class Session(Base):
     __tablename__ = "sessions"
 
-    id = Column(Integer, primary_key=True)
-    session_id = Column(String, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), index=True)
-    is_active = Column(Boolean, default=True)
-    expires_at = Column(String, default="2024-01-01T00:00:00")
+    id: Mapped[pk_id] = mapped_column(init=False)
+    session_id: Mapped[str_indexed]
+    user_id: Mapped[fk_user_id]
+    is_active: Mapped[bool] = mapped_column(default=True)
+    expires_at: Mapped[str] = mapped_column(default="2024-01-01T00:00:00")
 
-    user = relationship("User", back_populates="sessions")
+    user: Mapped["User"] = relationship(back_populates="sessions", default=None)
