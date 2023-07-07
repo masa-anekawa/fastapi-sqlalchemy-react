@@ -1,3 +1,4 @@
+from uuid import uuid4 as UUID
 from sqlalchemy.orm import Session
 
 from . import models
@@ -35,3 +36,53 @@ def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
     db.commit()
     db.refresh(db_item)
     return db_item
+
+
+# Create, validate, and invalidate sessions
+def create_session(db: Session, session: schemas.SessionCreate):
+    # try getting user and validating password
+    db_user = db.query(models.User).filter(models.User.id == session.user_id).first()
+    if not db_user:
+        return None
+    if not db_user.hashed_password == session.password + "notreallyhashed":
+        return None
+
+    # create session
+    session_id = UUID()
+    db_session = models.Session(
+        user_id=session.user_id,
+        session_id=str(session_id),
+        is_active=True,
+        expires_at="2024-01-01T00:00:00",
+        )
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return db_session
+
+
+def validate_session(db: Session, session: schemas.SessionValidate):
+    # Check if valid session exists for given user id, before given expired_at period, and is active
+    db_session = db.query(models.Session).filter(
+        models.Session.user_id == session.user_id,
+        models.Session.session_id == session.session_id,
+        models.Session.is_active == True,
+        models.Session.expires_at > "2021-01-01T00:00:00",
+        ).first()
+    if not db_session:
+        return None
+    return db_session
+
+
+def invalidate_session(db: Session, session: schemas.SessionInvalidate):
+    # invalidate existing session for given user id and session id, then return invalidated session
+    db_session = db.query(models.Session).filter(
+        models.Session.user_id == session.user_id,
+        models.Session.session_id == session.session_id,
+        ).first()
+    if not db_session:
+        return None
+    db_session.is_active = False
+    db.commit()
+    db.refresh(db_session)
+    return db_session

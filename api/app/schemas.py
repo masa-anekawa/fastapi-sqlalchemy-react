@@ -34,3 +34,29 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class SessionBase(BaseModel):
+    user_id: int
+
+
+class SessionCreate(SessionBase):
+    password: str
+
+
+class SessionValidate(SessionBase):
+    session_id: str
+
+
+class SessionInvalidate(SessionBase):
+    session_id: str
+
+
+class Session(SessionBase):
+    id: int
+    session_id: str
+    is_active: bool
+    expires_at: str
+
+    class Config:
+        orm_mode = True

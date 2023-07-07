@@ -68,3 +68,35 @@ def crete_item_for_user(user_id: int, item: schemas.ItemCreate, db: Session = De
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+# Session endpoints
+@app.post("/sessions/", response_model=schemas.Session)
+def create_session(session: schemas.SessionCreate, db: Session = Depends(get_db)):
+    db_session = crud.create_session(db=db, session=session)
+    if not db_session:
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    return db_session
+
+
+@app.post("/sessions/validate/", response_model=schemas.Session)
+def validate_session(session: schemas.SessionValidate, db: Session = Depends(get_db)):
+    db_session = crud.validate_session(db=db, session=session)
+    if not db_session:
+        raise HTTPException(status_code=400, detail="Invalid session")
+    return db_session
+
+
+@app.post("/sessions/invalidate/", response_model=schemas.Session)
+def invalidate_session(session: schemas.SessionInvalidate, db: Session = Depends(get_db)):
+    db_session = crud.invalidate_session(db=db, session=session)
+    if not db_session:
+        raise HTTPException(status_code=400, detail="Invalid session")
+    return db_session
+
+
+# login page
+@app.get("/login/")
+def login():
+    return {"message": "Login page"}
+

@@ -13,6 +13,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     items = relationship("Item", back_populates="owner")
+    sessions = relationship("Session", back_populates="user")
 
 
 class Item(Base):
@@ -24,3 +25,15 @@ class Item(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="items")
+
+
+class Session(Base):
+    __tablename__ = "sessions"
+
+    id = Column(Integer, primary_key=True)
+    session_id = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
+    is_active = Column(Boolean, default=True)
+    expires_at = Column(String, default="2024-01-01T00:00:00")
+
+    user = relationship("User", back_populates="sessions")

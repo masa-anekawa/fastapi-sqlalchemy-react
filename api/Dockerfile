@@ -1,6 +1,9 @@
 FROM tiangolo/uvicorn-gunicorn-fastapi:python3.11
 
-ADD ./requirements.txt /app/requirements.txt
-RUN python -m pip install -r /app/requirements.txt
-COPY ./app /app
-COPY ./db /db
+WORKDIR /app
+
+ADD ./requirements.txt ./requirements.txt
+RUN python -m pip install -r ./requirements.txt
+
+# COPY ./app ./app
+# COPY ./db ./db
