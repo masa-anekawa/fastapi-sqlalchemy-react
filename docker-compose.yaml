@@ -16,3 +16,12 @@ services:
       - ./frontend:/usr/src/app
     ports:
       - 3000:3000
+  db:
+    image: postgres:latest
+    container_name: alembic-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: alembic
+    ports:
+      - 5432:5432

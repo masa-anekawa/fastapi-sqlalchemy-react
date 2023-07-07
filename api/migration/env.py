@@ -2,7 +2,8 @@ from logging.config import fileConfig
 from alembic import context
 
 
-from ..database import Base, engine
+from app.models import Base
+from app.database import Engine
 
 
 # this is the Alembic Config object, which provides
@@ -58,7 +59,7 @@ def run_migrations_online() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    connectable = engine
+    connectable = Engine
 
     with connectable.connect() as connection:
         context.configure(

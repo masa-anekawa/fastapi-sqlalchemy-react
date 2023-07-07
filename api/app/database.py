@@ -2,9 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db/fastapi_app.db"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@localhost:5432/alembic"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-SessionLocal = sessionmaker(autoflush=False, bind=engine)
+Engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autoflush=False, bind=Engine)
 
 Base = declarative_base()

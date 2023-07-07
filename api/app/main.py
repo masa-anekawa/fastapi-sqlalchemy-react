@@ -6,13 +6,13 @@ from sqlalchemy.orm import Session
 from . import crud
 from . import models
 from . import schemas
-from .database import SessionLocal, engine
+from .database import SessionLocal, Engine
 
 
 origins = [
     "*",
 ]
-models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=Engine)
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -93,10 +93,3 @@ def invalidate_session(session: schemas.SessionInvalidate, db: Session = Depends
     if not db_session:
         raise HTTPException(status_code=400, detail="Invalid session")
     return db_session
-
-
-# login page
-@app.get("/login/")
-def login():
-    return {"message": "Login page"}
-
